@@ -1,0 +1,1 @@
+import 'package:flutter/cupertino.dart';import 'package:flutter/material.dart';extension ContextExtensions on BuildContext {  double get width => MediaQuery.of(this).size.width;  double get height => MediaQuery.of(this).size.height;  ThemeData get theme => Theme.of(this);  ColorScheme get colorScheme => theme.colorScheme;}

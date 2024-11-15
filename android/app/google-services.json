@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "508326817606",
+    "firebase_url": "https://unhappy-ending-default-rtdb.firebaseio.com",
+    "project_id": "unhappy-ending",
+    "storage_bucket": "unhappy-ending.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508326817606:android:ec4f050c555516dee57f47",
+        "android_client_info": {
+          "package_name": "com.firesoft.sleep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm_MxwiRPsnGuD0GjB9jpvsshANx6R4wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
