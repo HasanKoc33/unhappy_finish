@@ -62,41 +62,6 @@ class _ViewScreenState extends State<ViewScreen> with ViewScreenMixin {
                     interactive: true,
                   ),
                   Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.rotate_left,
-                                  color: Color(0xff285d63)),
-                              onPressed: () => humanFrontRotation(),
-                              tooltip: 'Önden Görünüm',
-                            ),
-                            Container(
-                              height: 24,
-                              width: 1,
-                              color: Colors.grey[300],
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.rotate_right,
-                                  color: Color(0xff285d63)),
-                              onPressed: () => humanBackRotation(),
-                              tooltip: 'Arkadan Görünüm',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
                     top: 16,
                     left: 16,
                     child: Card(
@@ -290,6 +255,7 @@ class _ViewScreenState extends State<ViewScreen> with ViewScreenMixin {
               );
             }
             if (snapshot.hasError) {
+              print(snapshot.error);
               return Icon(Icons.error, color: Colors.red);
             }
             return Container(

@@ -26,12 +26,21 @@ class _HomeScreenState extends State<HomeScreen> with HomeScreenMixin {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
-          'Sleep Monitor',
-          style: TextStyle(
-            color: Color(0xff285d63),
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.spa,
+              color: Color(0xff285d63),
+            ),
+            SizedBox(width: 8),
+            Text(
+              'Mutsuz Son',
+              style: TextStyle(
+                color: Color(0xff285d63),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -99,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> with HomeScreenMixin {
                       .where(
                           (element) => element.sagBileklik?.continuing != null)
                       .toList();
+                  print(personeller.length);
                   if (personeller.isEmpty) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -134,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> with HomeScreenMixin {
                                 ),
                               ),
                               SizedBox(height: 8),
-                            
                               Text(
                                 'Şu anda devam eden bir masaj seansı bulunmuyor.',
                                 textAlign: TextAlign.center,

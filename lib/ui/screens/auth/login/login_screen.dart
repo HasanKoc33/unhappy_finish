@@ -22,165 +22,188 @@ class _LoginScreenState extends State<LoginScreen> with LoginScreenMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: bodyWidget(context),
-    );
-  }
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            height: context.height - MediaQuery.of(context).padding.top,
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Logo ve Başlık
+                Icon(
+                  Icons.spa,
+                  size: 80,
+                  color: Color(0xff285d63),
+                ),
+                SizedBox(height: 24),
+                Text(
+                  "Mutsuz Son",
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff285d63),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Giriş Yap",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 48),
 
-  Widget bodyWidget(BuildContext context) {
-    return Container(
-      height: context.height,
-      color: context.theme.scaffoldBackgroundColor,
-      child: Container(
-        width: context.width > 800 ? 500 : context.width,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          borderRadius: BorderRadius.circular(5),
-          shape: BoxShape.rectangle,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 20.0,
-              spreadRadius: 0.0,
-              offset: Offset(0.0, 0.0), // shadow direction: bottom right
-            )
-          ],
-        ),
-        child: Center(
-          child: Builder(builder: (context) {
-            return Form(
-              key: loginFormKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(6.0),
-                    child: Text(
-                      "Giriş Yap",
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15, left: 15),
-                    child: TextFormField(
-                      controller: emailController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Email boş olamaz";
-                        } else if (!value.contains("@")) {
-                          return "Email geçersiz";
-                        } else {
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-                        ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary), borderRadius: BorderRadius.circular(5)),
-                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.primary), borderRadius: BorderRadius.circular(5)),
-                        labelText: "Email",
-                        labelStyle: const TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      cursorColor: Colors.black,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15, left: 15, top: 20),
-                    child: TextFormField(
-                      controller: passwordController,
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: isHidePassword,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Şifre boş olamaz";
-                        } else if (value.length < 6) {
-                          return "Şifre en az 6 karakter olmalıdır";
-                        } else {
-                          return null;
-                        }
-                      },
-                      onFieldSubmitted: (value) {
-                        logIn();
-                      },
-                      decoration: InputDecoration(
-                        suffix: InkWell(
-                          onTap: () {
-                            setState(() {
-                              isHidePassword = !isHidePassword;
-                            });
-                          },
-                          child: Icon(
-                            isHidePassword ? Icons.visibility : Icons.visibility_off,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-                        ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary), borderRadius: BorderRadius.circular(5)),
-                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.primary), borderRadius: BorderRadius.circular(5)),
-                        labelText: "Şifre",
-                        labelStyle: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        alignLabelWithHint: true,
-                      ),
-                      cursorColor: Colors.black,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Giriş Formu
+                Form(
+                  key: loginFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      _buildTextField(
+                        controller: emailController,
+                        label: "E-posta",
+                        icon: Icons.email_outlined,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "E-posta boş olamaz";
+                          } else if (!value.contains("@")) {
+                            return "Geçerli bir e-posta adresi giriniz";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
+                      _buildTextField(
+                        controller: passwordController,
+                        label: "Şifre",
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Şifre boş olamaz";
+                          } else if (value.length < 6) {
+                            return "Şifre en az 6 karakter olmalıdır";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 12),
+
+                      // Şifremi Unuttum
+                      Align(
+                        alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPassPage()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ForgotPassPage(),
+                              ),
+                            );
                           },
                           child: Text(
-                            "Şifremi Unuttum...",
-                            style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.primary),
+                            "Şifremi Unuttum",
+                            style: TextStyle(
+                              color: Color(0xff285d63),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
+                      ),
+                      SizedBox(height: 24),
+
+                      // Giriş Yap Butonu
+                      ElevatedButton(
+                        onPressed: wait ? null : () => logIn(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xff285d63),
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                        ),
+                        child: wait
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : Text(
+                                "Giriş Yap",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20.0),
-                    child: InkWell(
-                      onTap: wait ? null : () => logIn(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 15.0),
-                            child: wait
-                                ? CircularProgressIndicator(
-                                    color: context.colorScheme.background,
-                                  )
-                                : Text(
-                                    "Giriş yap",
-                                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
-          }),
+                ),
+              ],
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isPassword = false,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isPassword && isHidePassword,
+      validator: validator,
+      style: TextStyle(color: Color(0xff285d63)),
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Color(0xff285d63)),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  isHidePassword ? Icons.visibility : Icons.visibility_off,
+                  color: Color(0xff285d63),
+                ),
+                onPressed: () =>
+                    setState(() => isHidePassword = !isHidePassword),
+              )
+            : null,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Color(0xff285d63)),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        labelStyle: TextStyle(color: Colors.grey[600]),
       ),
     );
   }

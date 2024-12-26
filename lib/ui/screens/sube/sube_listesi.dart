@@ -32,7 +32,7 @@ class _SubeListesiState extends State<SubeListesi> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.business_outlined,
+                    Icons.spa,
                     size: 64,
                     color: Color(0xff285d63).withOpacity(0.5),
                   ),
@@ -59,7 +59,7 @@ class _SubeListesiState extends State<SubeListesi> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.search_off,
+                          Icons.spa,
                           size: 64,
                           color: Color(0xff285d63).withOpacity(0.5),
                         ),

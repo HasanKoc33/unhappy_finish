@@ -4,140 +4,174 @@ import 'package:sleep/core/providers/frog_pass_cubit.dart';
 import 'package:sleep/utils/bildiriler.dart';
 import 'package:sleep/utils/extensions.dart';
 
-
 class ForgotPassPage extends StatelessWidget {
   const ForgotPassPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: bodyWidget(size, context),
-    );
-  }
-
-  Widget bodyWidget(Size size, BuildContext context) {
-    return Center(
-      child: Container(
-        width: size.width > 800 ? 500 : size.width * .9,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          borderRadius: BorderRadius.circular(5),
-          shape: BoxShape.rectangle,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 20.0,
-              spreadRadius: 0.0,
-              offset: Offset(0.0, 0.0), // shadow direction: bottom right
-            )
-          ],
+      backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color(0xff285d63)),
+          onPressed: () => Navigator.pop(context),
         ),
-        child: Builder(builder: (context) {
-          var state = context.watch<FrogPassCubit>().state;
-          return Form(
-            key: context.read<FrogPassCubit>().formKey,
-            autovalidateMode: state is FrogPassValidate
-                ? state.isFrogPassFail
-                    ? AutovalidateMode.always
-                    : AutovalidateMode.disabled
-                : AutovalidateMode.disabled,
+        title: Text(
+          'Şifremi Unuttum',
+          style: TextStyle(
+            color: Color(0xff285d63),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: const [
-                    BackButton(),
-                    Padding(
-                      padding: EdgeInsets.all(6.0),
-                      child: Text(
-                        "Şifremi Unuttum",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
+                // İkon ve Açıklama
+                Icon(
+                  Icons.lock_reset,
+                  size: 80,
+                  color: Color(0xff285d63),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 15, left: 15, top: 50),
-                  child: TextFormField(
-                    controller: context.read<FrogPassCubit>().emailController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Email boş olamaz";
-                      } else if (!value.contains("@")) {
-                        return "Email geçersiz";
-                      } else {
-                        return null;
-                      }
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.tertiary),
-                          borderRadius: BorderRadius.circular(5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary),
-                          borderRadius: BorderRadius.circular(5)),
-                      labelText: "Email",
-                      labelStyle: TextStyle(
-                        color: context.colorScheme.secondary,
-                      ),
-                    ),
-                    cursorColor: context.colorScheme.secondary,
+                SizedBox(height: 24),
+                Text(
+                  'Şifre Sıfırlama',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff285d63),
                   ),
                 ),
-                BlocConsumer<FrogPassCubit, FrogPassState>(
-                  listener: (context, state) {
-                    if (state is FrogPassError) {
-                      bildiri(context, state.message);
-                    } else if (state is FrogPassSuccess) {
-                      mesaj(state.message!);
-                      Navigator.pop(context);
-                    }
-                  },
-                  builder: (context, state) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: InkWell(
-                        onTap: state is FrogPassLoading
-                            ? null
-                            : () => context.read<FrogPassCubit>().frogPass(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                                left: 30, right: 30, top: 15, bottom: 15),
-                            child: Text(
-                              "Gönder",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                SizedBox(height: 12),
+                Text(
+                  'E-posta adresinizi girin, size şifre sıfırlama bağlantısı gönderelim.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 48),
+
+                // Form
+                Builder(builder: (context) {
+                  var state = context.watch<FrogPassCubit>().state;
+                  return Form(
+                    key: context.read<FrogPassCubit>().formKey,
+                    autovalidateMode: state is FrogPassValidate
+                        ? state.isFrogPassFail
+                            ? AutovalidateMode.always
+                            : AutovalidateMode.disabled
+                        : AutovalidateMode.disabled,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // E-posta alanı
+                        TextFormField(
+                          controller:
+                              context.read<FrogPassCubit>().emailController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "E-posta boş olamaz";
+                            } else if (!value.contains("@")) {
+                              return "Geçerli bir e-posta adresi giriniz";
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(color: Color(0xff285d63)),
+                          decoration: InputDecoration(
+                            labelText: "E-posta",
+                            prefixIcon: Icon(Icons.email_outlined,
+                                color: Color(0xff285d63)),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
                             ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey[300]!),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Color(0xff285d63)),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            labelStyle: TextStyle(color: Colors.grey[600]),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                        SizedBox(height: 24),
+
+                        // Gönder butonu
+                        BlocConsumer<FrogPassCubit, FrogPassState>(
+                          listener: (context, state) {
+                            if (state is FrogPassError) {
+                              bildiri(context, state.message);
+                            } else if (state is FrogPassSuccess) {
+                              mesaj(state.message!);
+                              Navigator.pop(context);
+                            }
+                          },
+                          builder: (context, state) {
+                            return ElevatedButton(
+                              onPressed: state is FrogPassLoading
+                                  ? null
+                                  : () =>
+                                      context.read<FrogPassCubit>().frogPass(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xff285d63),
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 2,
+                              ),
+                              child: state is FrogPassLoading
+                                  ? SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      ),
+                                    )
+                                  : Text(
+                                      'Gönder',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ],
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }

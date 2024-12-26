@@ -23,7 +23,7 @@ final class App extends StatelessWidget {
           BlocProvider(create: (_) => FrogPassCubit()),
         ],
         child: MaterialApp(
-          title: 'Sleep',
+          title: 'Mutsuz Son',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primaryColor: Color(0xff285d63),
