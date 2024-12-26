@@ -1,16 +1,17 @@
-const functions = require("firebase-functions");
+
+const {onRequest} = require("firebase-functions/v2/https");
 const axios = require("axios");
 
 
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-exports.test = functions.https.onRequest(async (req, res) => {
-  res.status(200).send('Hello World!' + request.method + ' ' + request.url + ' ' +new Date().toISOString());
+exports.test = onRequest(async (req, res) => {
+  res.status(200).send('Hello World!' + req.method + ' ' + req.url + ' ' +new Date().toISOString());
 });
 
-exports.start = functions.https.onRequest(async (req, res) => {
-  if (request.method === "POST") {
+exports.start = onRequest(async (req, res) => {
+  if (req.method === "POST") {
     const deviceId = req.body.deviceId;
     const data = await deviceSearch(deviceId);
     if (data) {
@@ -23,9 +24,8 @@ exports.start = functions.https.onRequest(async (req, res) => {
     res.status(405).send('Method Not Allowed'); 
   }
  });
- exports.write = functions.https.onRequest(async (req, res) => {
-
-  if (request.method === "POST") {
+ exports.write = onRequest(async (req, res) => {
+  if (req.method === "POST") {
     if (req.body.token !== "bD2P4Hc4kfAoBP") {
       return res.status(403).send('Forbidden');
     }
@@ -43,8 +43,8 @@ exports.start = functions.https.onRequest(async (req, res) => {
   }
  });
 
- exports.end = functions.https.onRequest(async (req, res) => {
-  if (request.method === "POST") {
+ exports.end = onRequest(async (req, res) => {
+  if (req.method === "POST") {
     if (req.body.token !== "bD2P4Hc4kfAoBP") {
       return res.status(403).send('Forbidden');
     }
@@ -103,8 +103,10 @@ async function seansStart(data) {
 
 async function seansWrite(data) {
   const list = {};
+  let i = 0;
   data.data.forEach(element => {
-      list[new Date().toISOString().replaceAll('.','*')] = element;
+      const date = new Date().toISOString().split('.')[0]+ '*' + i++ + 'Z';
+      list[date] = element;
   });
   const startData = await axios.patch('https://unhappy-ending-default-rtdb.firebaseio.com/personeller/' + data.id + '/' + data.kol + '/continuing/data.json',
       list
